@@ -5,26 +5,13 @@ from django.shortcuts import render, redirect
 # Create your views here.
 def index(request):
     if request.method == 'POST':
-        opt1 = request.POST.get('combination')
-        opt2 = request.POST.get('option2')
-        opt3 = request.POST.get('option3')
-        sequence = request.POST.get('selectionOrder')
 
-        # Processar a combinação de opções
-        if opt1 and opt2 and opt3:
-            # Lógica para processar a combinação de opções
-            combination = str(opt1 + opt2 + opt3)
-        else:
-            combination = None
-        print(f'==========>{combination}')
-        print(f'==========>{sequence}')
+        order = request.POST.get('order')
 
+        print(f'==========>{order}')
 
-        if combination == "AZ2":
+        if order == "A,B,C":
             return redirect('02')
-
-        # Retornar uma resposta com base na combinação
-        #return HttpResponse(f"Você selecionou a combinação: {combination}")
 
     return render(request, 'htmls/01.html')
 

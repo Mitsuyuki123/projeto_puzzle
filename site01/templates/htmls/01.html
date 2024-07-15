@@ -36,148 +36,133 @@ position: absolute;
 {% endblock %}
 
 {% block content %}
-<form id="combination-form" method="post" action="#">
+
+<form id="combination-form" method="post" action="{% url 'index' %}">
 	{% csrf_token %}
 	<div class="radial-container" id="radial-container1">
-
 		<label>
-			<input type="radio" name="combination" value="A"> Opção 1A
+			<input type="radio" name="combination" value="A"> Opção A
 		</label>
+	</div>
+	<div class="radial-container" id="radial-container2">
 		<label>
-			<input type="radio" name="combination" value="B"> Opção 1B
+			<input type="radio" name="combination" value="B"> Opção B
 		</label>
+	</div>
+	<div class="radial-container" id="radial-container3">
 		<label>
-			<input type="radio" name="combination" value="C"> Opção 1C
+			<input type="radio" name="combination" value="C"> Opção C
 		</label>
 	</div>
 	<br>
-	<div class="radial-container" id="radial-container2" style="background-color: #7c94d9;">
-		<label>
-			<input type="radio" name="option2" value="X"> Opção 2X
-		</label>
-		<label>
-			<input type="radio" name="option2" value="Y"> Opção 2Y
-		</label>
-		<label>
-			<input type="radio" name="option2" value="Z"> Opção 2Z
-		</label>
-	</div>
-	<br>
-	<div class="radial-container" id="radial-container3" style="background-color: #d97cb7;">
-		<label>
-			<input type="radio" name="option3" value="1"> Opção 3-1
-		</label>
-		<label>
-			<input type="radio" name="option3" value="2"> Opção 3-2
-		</label>
-		<label>
-			<input type="radio" name="option3" value="3"> Opção 3-3
-		</label>
-	</div>
-	<br>
-	<input type="submit" value="Enviar" id="submit-button">
+	<input type="submit" id="submit-button" value="Enviar">
 	<input type="hidden" name="order" id="selection-order">
 </form>
+
 
 {% endblock %}
 
 {% block extra_script %}
 <script>
-	document.querySelectorAll('input[name="combination"]').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    selectionOrder.push(event.target.value);
-                    selectionOrderInput.value = selectionOrder.join(',');
-                });
-            });
-	document.getElementById('combination-form').addEventListener('submit', (event) => {
-            selectionOrderInput.value = selectionOrder.join(',');
-        });
+
 
 	document.addEventListener('DOMContentLoaded', () => {
-			const container1 = document.getElementById('radial-container1');
-			const container2 = document.getElementById('radial-container2');
-			const container3 = document.getElementById('radial-container3');
-			let xDirection1 = 0.9;
-			let xDirection2 = -1;
-			let xDirection3 = 1.1;
-			let yDirection1 = 1;
-			let yDirection2 = -1.1;
-			let yDirection3 = -0.95;
-			let teste = 3;
-			let speed = 1;
+				const selectionOrder = [];
+                const selectionOrderInput = document.getElementById('selection-order');
+                document.querySelectorAll('input[name="combination"]').forEach(radio => {
+	                radio.addEventListener('change', (event) => {
+	                    selectionOrder.push(event.target.value);
+	                    selectionOrderInput.value = selectionOrder.join(',');
+                    });
+                });
+				document.getElementById('combination-form').addEventListener('submit', (event) => {
+                    selectionOrderInput.value = selectionOrder.join(',');
+                });
+				const container1 = document.getElementById('radial-container1');
+				const container2 = document.getElementById('radial-container2');
+				const container3 = document.getElementById('radial-container3');
+				let xDirection1 = 1;
+				let xDirection2 = -1;
+				let xDirection3 = 1;
+				let yDirection1 = -1;
+				let yDirection2 = 1;
+				let yDirection3 = 1;
+				let teste = 3;
+				let speed = 1;
 
-			function moveContainer() {
-				const rect = container1.getBoundingClientRect();
-				if (rect.right >= window.innerWidth || rect.left <= 0) {
-					xDirection1 *= -1;
-					if (teste > 0){
-						teste -= 1;
+				function moveContainer() {
+					const rect = container1.getBoundingClientRect();
+					if (rect.right >= window.innerWidth || rect.left <= 0) {
+						xDirection1 *= -1;
+						if (teste > 0){
+							teste -= 1;
+						}
+						if (teste <= 0){
+							yDirection1 *= -1;
+							teste = 2;
+						}
 					}
-					if (teste <= 0){
+					if (rect.bottom >= window.innerHeight || rect.top <= 0) {
 						yDirection1 *= -1;
-						teste = 2;
 					}
+					container1.style.left = `${rect.left + xDirection1 * speed}px`;
+					container1.style.top = `${rect.top + yDirection1 * speed}px`;
+					requestAnimationFrame(moveContainer);
 				}
-				if (rect.bottom >= window.innerHeight || rect.top <= 0) {
-					yDirection1 *= -1;
-				}
-				container1.style.left = `${rect.left + xDirection1 * speed}px`;
-				container1.style.top = `${rect.top + yDirection1 * speed}px`;
-				requestAnimationFrame(moveContainer);
-			}
-			function moveContainer2() {
-				const rect = container2.getBoundingClientRect();
-				if (rect.right >= window.innerWidth || rect.left <= 0) {
-					xDirection2 *= -1;
-				}
-				if (rect.bottom >= window.innerHeight || rect.top <= 0) {
-					yDirection2 *= -1;
-				}
-				container2.style.left = `${rect.left + xDirection2 * speed}px`;
-				container2.style.top = `${rect.top + yDirection2 * speed}px`;
-				requestAnimationFrame(moveContainer2);
-			}
-			function moveContainer3() {
-				const rect = container3.getBoundingClientRect();
-				if (rect.right >= window.innerWidth || rect.left <= 0) {
-					xDirection3 *= -1;
-				}
-				if (rect.bottom >= window.innerHeight || rect.top <= 0) {
-					yDirection3 *= -1;
-					if (teste > 0){
-						teste -= 1;
+				function moveContainer2() {
+					const rect = container2.getBoundingClientRect();
+					if (rect.right >= window.innerWidth || rect.left <= 0) {
+						xDirection2 *= -1;
 					}
-					if (teste <= 0){
+					if (rect.bottom >= window.innerHeight || rect.top <= 0) {
+						yDirection2 *= -1;
+					}
+					container2.style.left = `${rect.left + xDirection2 * speed}px`;
+					container2.style.top = `${rect.top + yDirection2 * speed}px`;
+					requestAnimationFrame(moveContainer2);
+				}
+				function moveContainer3() {
+					const rect = container3.getBoundingClientRect();
+					if (rect.right >= window.innerWidth || rect.left <= 0) {
 						xDirection3 *= -1;
-						teste = 3;
 					}
+					if (rect.bottom >= window.innerHeight || rect.top <= 0) {
+						yDirection3 *= -1;
+						if (teste > 0){
+							teste -= 1;
+						}
+						if (teste <= 0){
+							xDirection3 *= -1;
+							teste = 3;
+						}
+					}
+					container3.style.left = `${rect.left + xDirection3 * speed}px`;
+					container3.style.top = `${rect.top + yDirection3 * speed}px`;
+					requestAnimationFrame(moveContainer3);
 				}
-				container3.style.left = `${rect.left + xDirection3 * speed}px`;
-				container3.style.top = `${rect.top + yDirection3 * speed}px`;
+
 				requestAnimationFrame(moveContainer3);
-			}
+				requestAnimationFrame(moveContainer);
+				requestAnimationFrame(moveContainer2);
 
-			requestAnimationFrame(moveContainer3);
-			requestAnimationFrame(moveContainer);
-			requestAnimationFrame(moveContainer2);
+				const submitButton = document.getElementById('submit-button');
+				const radius = 300; // Alterar este valor para ajustar o raio do círculo
+				const centerX = window.innerWidth / 2;
+				const centerY = window.innerHeight / 2;
+				let angle = 0;
 
-			const submitButton = document.getElementById('submit-button');
-            const radius = 300; // Alterar este valor para ajustar o raio do círculo
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            let angle = 0;
+				function moveButton() {
+					angle += (speed/200);
+					const x = centerX + radius * Math.cos(angle) - submitButton.offsetWidth / 2;
+					const y = centerY + radius * Math.sin(angle) - submitButton.offsetHeight / 2;
+					submitButton.style.left = `${x}px`;
+					submitButton.style.top = `${y}px`;
+					requestAnimationFrame(moveButton);
+				}
 
-            function moveButton() {
-                angle += (speed/100);
-                const x = centerX + radius * Math.cos(angle) - submitButton.offsetWidth / 2;
-                const y = centerY + radius * Math.sin(angle) - submitButton.offsetHeight / 2;
-                submitButton.style.left = `${x}px`;
-                submitButton.style.top = `${y}px`;
-                requestAnimationFrame(moveButton);
-            }
+				requestAnimationFrame(moveButton);
+			});
 
-            requestAnimationFrame(moveButton);
-		});
 
 </script>
 {% endblock %}
