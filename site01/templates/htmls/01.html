@@ -113,9 +113,23 @@ position: absolute;
 					const rect = container2.getBoundingClientRect();
 					if (rect.right >= window.innerWidth || rect.left <= 0) {
 						xDirection2 *= -1;
+						if (teste > 0){
+							teste -= 1;
+						}
+						if (teste <= 0){
+							yDirection2 *= -1;
+							teste = 3;
+						}
 					}
 					if (rect.bottom >= window.innerHeight || rect.top <= 0) {
 						yDirection2 *= -1;
+						if (teste > 0){
+							teste -= 1;
+						}
+						if (teste <= 0){
+							xDirection2 *= -1;
+							teste = 4;
+						}
 					}
 					container2.style.left = `${rect.left + xDirection2 * speed}px`;
 					container2.style.top = `${rect.top + yDirection2 * speed}px`;
